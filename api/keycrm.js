@@ -1,11 +1,14 @@
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' })
+  res.setHeader('Access-Control-Allow-Origin', 'https://travel-visa.com.ua')
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end()
   }
 
-  const origin = req.headers.origin || ''
-  if (origin !== 'https://travel-visa.com.ua') {
-    return res.status(403).json({ error: 'Forbidden' })
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed' })
   }
 
   const { name, phone } = req.body
