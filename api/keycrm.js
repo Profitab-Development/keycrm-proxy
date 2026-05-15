@@ -19,7 +19,7 @@ export default async function handler(req, res) {
   const response = await fetch('https://openapi.keycrm.app/v1/pipelines/cards', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer NmFkNmZkOGQ3ZjIzYTI0NGM3MTk0NmRkZjI2OTBjMWY2NGJiNTc1NA',
+      'Authorization': `Bearer ${process.env.KEYCRM_TOKEN}`,
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     },
