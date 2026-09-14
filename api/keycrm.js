@@ -70,6 +70,7 @@ export default async function handler(req, res) {
   const payload = {
     pipeline_id: 1,
     source_id: 4,
+    manager_id: 9,
     title: `Заявка з сайту${name ? ' — ' + name : ''}`,
     contact,
   }
