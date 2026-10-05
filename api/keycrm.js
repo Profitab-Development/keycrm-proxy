@@ -133,7 +133,7 @@ async function sendToWebhook({ name, phone }) {
         source: 'travel-visa.com.ua',
         created_at: new Date().toISOString(),
       }),
-      signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(10000),
     })
 
     console.log('Webhook:', result.status)
