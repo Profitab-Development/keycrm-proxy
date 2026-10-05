@@ -58,6 +58,7 @@
 const ALLOWED_ORIGINS = [
   'https://travel-visa.com.ua',
   'https://www.travel-visa.com.ua',
+  'http://localhost:3000',
 ]
 
 export default async function handler(req, res) {
