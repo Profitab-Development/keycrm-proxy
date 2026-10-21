@@ -55,6 +55,8 @@
 // }
 
 
+import { leadTrackingFields } from '../lib/lead-tracking.js'
+
 const ALLOWED_ORIGINS = [
   'https://travel-visa.com.ua',
   'https://www.travel-visa.com.ua',
@@ -78,6 +80,8 @@ export default async function handler(req, res) {
   }
 
   const { name, phone } = req.body
+  const receivedAt = new Date()
+  const tracking = leadTrackingFields(req.body, receivedAt)
 
   const contact = { phone }
   if (name) contact.full_name = name
@@ -105,7 +109,7 @@ export default async function handler(req, res) {
     response.ok ? `card ${data.id}, manager ${data.manager_id}` : JSON.stringify(data)
   )
 
-  await sendToWebhook({ name, phone })
+  await sendToWebhook({ name, phone, tracking, receivedAt })
 
   if (response.ok) {
     return res.status(200).json({ success: 'Lead created!' })
@@ -114,7 +118,7 @@ export default async function handler(req, res) {
   }
 }
 
-async function sendToWebhook({ name, phone }) {
+async function sendToWebhook({ name, phone, tracking, receivedAt }) {
   const url = process.env.LEAD_WEBHOOK_URL
   if (!url) return
 
@@ -131,7 +135,8 @@ async function sendToWebhook({ name, phone }) {
         name: name || null,
         phone,
         source: 'travel-visa.com.ua',
-        created_at: new Date().toISOString(),
+        created_at: receivedAt.toISOString(),
+        ...tracking,
       }),
         signal: AbortSignal.timeout(10000),
     })
