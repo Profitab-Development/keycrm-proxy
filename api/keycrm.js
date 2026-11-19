@@ -56,6 +56,7 @@
 
 
 import { leadTrackingFields } from '../lib/lead-tracking.js'
+import { receiveConsultation } from '../lib/consultation.js'
 
 const ALLOWED_ORIGINS = [
   'https://travel-visa.com.ua',
@@ -77,6 +78,13 @@ export default async function handler(req, res) {
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' })
+  }
+
+  // The current website waits for a durable CRM receipt. Older clients keep
+  // their existing delivery path while the website update rolls out.
+  if (req.body?.attemptId !== undefined) {
+    if (!ALLOWED_ORIGINS.includes(origin)) return res.status(403).json({ error: 'Origin not allowed' })
+    return receiveConsultation(req, res)
   }
 
   const { name, phone } = req.body
